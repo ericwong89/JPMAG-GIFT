@@ -1,0 +1,81 @@
+# Decap CMS 配置文件
+# 本地开发：使用 test-repo 后端（无需 GitHub，任意账号密码可登录）
+# 部署到 GitHub Pages + Netlify 时：改回 git-gateway 后端
+
+backend:
+  name: test-repo
+
+media_folder: "assets/images"
+public_folder: "/assets/images"
+
+collections:
+  - name: "magazines"
+    label: "杂志"
+    label_singular: "杂志"
+    folder: "content/magazines"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: name
+    summary: "{{name}} ({{release_date}})"
+    list_fields: [name, release_date, cover, featured]
+    fields:
+      - { label: "杂志名称", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "发售日", name: "release_date", widget: "date", format: "YYYY-MM-DD" }
+      - { label: "发售频率", name: "release_cycle", widget: "select", options: ["每月7日","每月12日","每月21日","每月23日","其他"], default: "每月23日" }
+      - { label: "封面图", name: "cover", widget: "image" }
+      - { label: "本期推荐", name: "featured", widget: "boolean", default: false }
+      - { label: "简介", name: "description", widget: "text", required: false }
+      - label: "赠品列表"
+        name: "gifts"
+        widget: "list"
+        label_singular: "赠品"
+        summary: "{{fields.title}}"
+        fields:
+          - { label: "赠品名", name: "title", widget: "string" }
+          - { label: "描述", name: "desc", widget: "text" }
+          - { label: "期号", name: "issue", widget: "string" }
+          - { label: "图片", name: "image", widget: "image", required: false }
+          - { label: "品牌", name: "brand", widget: "string", required: false }
+          - { label: "价格(日元)", name: "price", widget: "number", value_type: "int", required: false }
+          - label: "分类"
+            name: "category"
+            widget: "select"
+            options: ["包包·收纳袋","美妆·护肤","生活杂货","时尚配饰","其他"]
+          - { label: "热门", name: "hot", widget: "boolean", default: false }
+
+  - name: "gifts"
+    label: "赠品库"
+    label_singular: "赠品"
+    folder: "content/gifts"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} ({{magazine}})"
+    fields:
+      - { label: "赠品名", name: "title", widget: "string" }
+      - { label: "描述", name: "desc", widget: "text" }
+      - { label: "所属杂志", name: "magazine", widget: "string" }
+      - { label: "期号", name: "issue", widget: "string" }
+      - { label: "图片", name: "image", widget: "image", required: false }
+      - { label: "品牌", name: "brand", widget: "string", required: false }
+      - { label: "价格(日元)", name: "price", widget: "number", value_type: "int", required: false }
+      - label: "分类"
+        name: "category"
+        widget: "select"
+        options: ["包包·收纳袋","美妆·护肤","生活杂货","时尚配饰","其他"]
+      - { label: "热门", name: "hot", widget: "boolean", default: false }
+
+  - name: "announcements"
+    label: "首页公告"
+    folder: "content/announcements"
+    create: true
+    delete: true
+    identifier_field: title
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "内容", name: "content", widget: "markdown", required: false }
+      - { label: "发布时间", name: "date", widget: "datetime", format: "YYYY-MM-DD HH:mm" }
+      - { label: "显示", name: "published", widget: "boolean", default: true }
