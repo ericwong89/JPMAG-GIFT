@@ -5,6 +5,7 @@
 backend:
   name: git-gateway
   branch: main
+  auth_scope: "repo"
 
 # 站点 URL（用于 OAuth 重定向和预览）
 site_url: "https://jpmag-gift.netlify.app"
