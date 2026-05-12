@@ -2,262 +2,249 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ふろく.jp - 日本杂志赠品情报</title>
+  <meta name="description" content="日本杂志赠品情报汇总站。每月更新最新杂志附赠好物，帮你不错过每一份惊喜。">
+  <meta name="theme-color" content="#FAF8F5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta property="og:title" content="ふろく.jp - 日本杂志赠品情报">
+  <meta property="og:description" content="日本杂志赠品情报汇总站。每月更新最新杂志附赠好物。">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="manifest" href="/manifest.json">
+  
+  <!-- 资源提示：提前建立连接 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="dns-prefetch" href="https://github.com">
+  
+  <!-- 预加载关键资源 -->
+  <link rel="preload" as="image" href="/assets/icons/icon-192x192.png" type="image/png">
+  
+  <!-- Google Fonts：异步加载 + font-display:swap -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@400;500&display=swap" onload="this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@400;500&display=swap"></noscript>
+  
   <style>
-    :root {
-      --color-bg: #FAF8F5; --color-surface: #FFFFFF; --color-cream: #F5EDE4;
-      --color-text: #3A3A3A; --color-text-light: #8A8A8A; --color-border: #E8E0D8;
-      --color-accent: #D4846C;
-      --font-display: 'Noto Serif SC', serif; --font-body: 'Noto Sans SC', sans-serif;
-      --radius-sm: 8px; --radius-md: 16px;
-      --shadow-soft: 0 2px 16px rgba(0,0,0,0.04); --shadow-hover: 0 8px 32px rgba(0,0,0,0.08);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); line-height: 1.8; -webkit-font-smoothing: antialiased; }
-    .container { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
-    .section { padding: 80px 0; }
-
-    .top-nav { position: sticky; top: 0; background: rgba(250,248,245,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border); z-index: 100; height: 64px; display: flex; align-items: center; }
-    .top-nav .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-    .nav-brand { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--color-text); text-decoration: none; letter-spacing: 2px; }
-    .nav-brand span { color: var(--color-accent); }
-    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
-    .nav-links a { text-decoration: none; color: var(--color-text-light); font-size: 14px; letter-spacing: 1px; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--color-accent); }
-    .lang-switch { display: flex; border: 1px solid var(--color-border); border-radius: 9999px; overflow: hidden; margin-left: 16px; }
-    .lang-btn { background: none; border: none; padding: 6px 14px; font-size: 12px; cursor: pointer; color: var(--color-text-light); transition: all 0.2s; font-family: var(--font-body); }
-    .lang-btn.active { background: var(--color-text); color: var(--color-bg); }
-    .lang-btn:hover:not(.active) { background: var(--color-cream); }
-
-    .hero { padding: 100px 0 80px; text-align: center; background: linear-gradient(180deg, var(--color-cream) 0%, var(--color-bg) 100%); }
-    .hero-eyebrow { font-size: 12px; letter-spacing: 4px; color: var(--color-text-light); margin-bottom: 16px; text-transform: uppercase; }
-    .hero-title { font-family: var(--font-display); font-size: 48px; font-weight: 400; line-height: 1.3; color: var(--color-text); margin-bottom: 20px; letter-spacing: 2px; }
-    .hero-title .accent { color: var(--color-accent); }
-    .hero-subtitle { font-size: 16px; color: var(--color-text-light); max-width: 520px; margin: 0 auto 40px; line-height: 2; }
-
-    .section-header { text-align: center; margin-bottom: 56px; }
-    .section-eyebrow { font-size: 11px; letter-spacing: 4px; color: var(--color-text-light); margin-bottom: 12px; text-transform: uppercase; }
-    .section-title { font-family: var(--font-display); font-size: 32px; font-weight: 400; color: var(--color-text); letter-spacing: 2px; }
-    .section-title-en { font-size: 12px; letter-spacing: 3px; color: var(--color-text-light); margin-top: 8px; display: block; }
-
-    .admin-banner { background: var(--color-surface); border: 2px dashed var(--color-border); border-radius: var(--radius-md); padding: 32px; text-align: center; margin-bottom: 48px; transition: all 0.2s; cursor: pointer; }
-    .admin-banner:hover { border-color: var(--color-accent); }
-    .admin-banner a { text-decoration: none; color: var(--color-text-light); font-size: 14px; letter-spacing: 1px; display: block; }
-    .admin-banner a:hover { color: var(--color-accent); }
-    .admin-icon { font-size: 28px; margin-bottom: 8px; display: block; }
-
-    .magazine-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
-    .magazine-card { background: var(--color-surface); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-soft); transition: all 0.3s; text-decoration: none; color: inherit; display: block; }
-    .magazine-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
-    .magazine-card__cover { width: 100%; aspect-ratio: 3/4; background: var(--color-cream); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--color-text-light); position: relative; overflow: hidden; }
-    .magazine-card__cover img { width: 100%; height: 100%; object-fit: cover; }
-    .magazine-card__badge { position: absolute; top: 12px; left: 12px; background: var(--color-accent); color: white; font-size: 11px; padding: 4px 10px; border-radius: var(--radius-sm); letter-spacing: 1px; }
-    .magazine-card__body { padding: 20px; }
-    .magazine-card__title { font-family: var(--font-display); font-size: 15px; font-weight: 600; margin-bottom: 8px; line-height: 1.5; }
-    .magazine-card__meta { font-size: 12px; color: var(--color-text-light); }
-
-    .site-footer { background: var(--color-text); color: rgba(255,255,255,0.6); padding: 64px 0 32px; font-size: 13px; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .footer-brand { font-family: var(--font-display); font-size: 18px; color: rgba(255,255,255,0.9); margin-bottom: 16px; letter-spacing: 2px; }
-    .footer-desc { line-height: 2; font-size: 13px; }
-    .footer-heading { font-size: 12px; letter-spacing: 2px; color: rgba(255,255,255,0.9); margin-bottom: 20px; }
-    .footer-links { list-style: none; }
-    .footer-links li { margin-bottom: 12px; }
-    .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; transition: color 0.2s; }
-    .footer-links a:hover { color: rgba(255,255,255,0.9); }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-
-    .newsletter { background: var(--color-cream); border-radius: var(--radius-md); padding: 64px 48px; text-align: center; margin-bottom: 0; }
-    .newsletter-title { font-family: var(--font-display); font-size: 28px; font-weight: 400; color: var(--color-text); letter-spacing: 2px; margin-bottom: 12px; }
-    .newsletter-subtitle { font-size: 14px; color: var(--color-text-light); margin-bottom: 36px; line-height: 2; }
-    .newsletter-form { display: flex; justify-content: center; gap: 12px; max-width: 480px; margin: 0 auto; }
-    .newsletter-input { flex: 1; padding: 14px 20px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); font-size: 14px; font-family: var(--font-body); color: var(--color-text); outline: none; transition: border-color 0.2s; }
-    .newsletter-input:focus { border-color: var(--color-accent); }
-    .newsletter-input::placeholder { color: #C0B8B0; }
-    .newsletter-btn { padding: 14px 32px; background: var(--color-text); color: var(--color-bg); border: none; border-radius: var(--radius-sm); font-size: 14px; letter-spacing: 1px; cursor: pointer; transition: background 0.2s; font-family: var(--font-body); white-space: nowrap; }
-    .newsletter-btn:hover { background: var(--color-accent); }
-    .newsletter-note { font-size: 12px; color: var(--color-text-light); margin-top: 20px; }
-
-    @media (max-width: 768px) {
-      .newsletter { padding: 48px 24px; }
-      .newsletter-form { flex-direction: column; }
-      .newsletter-btn { width: 100%; }
+    :root{--bg:#FAF8F5;--surface:#FFF;--cream:#F5EDE4;--text:#3A3A3A;--text-light:#8A8A8A;--border:#E8E0D8;--accent:#D4846C;--font-display:'Noto Serif SC',serif;--font-body:'Noto Sans SC',sans-serif;--r-sm:8px;--r-md:16px;--shadow-soft:0 2px 16px rgba(0,0,0,.04);--shadow-hover:0 8px 32px rgba(0,0,0,.08)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.8;-webkit-font-smoothing:antialiased}
+    .container{max-width:1080px;margin:0 auto;padding:0 32px}
+    .section{padding:80px 0}
+    
+    .top-nav{position:sticky;top:0;background:rgba(250,248,245,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;height:64px;display:flex;align-items:center}
+    .top-nav .container{display:flex;align-items:center;justify-content:space-between;width:100%}
+    .nav-brand{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--text);text-decoration:none;letter-spacing:2px}
+    .nav-brand span{color:var(--accent)}
+    .nav-links{display:flex;gap:32px;list-style:none;align-items:center}
+    .nav-links a{text-decoration:none;color:var(--text-light);font-size:14px;letter-spacing:1px;transition:color .2s}
+    .nav-links a:hover{color:var(--accent)}
+    .lang-switch{display:flex;border:1px solid var(--border);border-radius:9999px;overflow:hidden;margin-left:16px}
+    .lang-btn{background:none;border:none;padding:6px 14px;font-size:12px;cursor:pointer;color:var(--text-light);transition:all .2s;font-family:var(--font-body)}
+    .lang-btn.active{background:var(--text);color:var(--bg)}
+    .lang-btn:hover:not(.active){background:var(--cream)}
+    
+    .hero{padding:100px 0 80px;text-align:center;background:linear-gradient(180deg,var(--cream) 0%,var(--bg) 100%)}
+    .hero-eyebrow{font-size:12px;letter-spacing:4px;color:var(--text-light);margin-bottom:16px;text-transform:uppercase}
+    .hero-title{font-family:var(--font-display);font-size:48px;font-weight:400;line-height:1.3;color:var(--text);margin-bottom:20px;letter-spacing:2px}
+    .hero-title .accent{color:var(--accent)}
+    .hero-subtitle{font-size:16px;color:var(--text-light);max-width:520px;margin:0 auto 40px;line-height:2}
+    
+    .section-header{text-align:center;margin-bottom:56px}
+    .section-eyebrow{font-size:11px;letter-spacing:4px;color:var(--text-light);margin-bottom:12px;text-transform:uppercase}
+    .section-title{font-family:var(--font-display);font-size:32px;font-weight:400;color:var(--text);letter-spacing:2px}
+    .section-title-en{font-size:12px;letter-spacing:3px;color:var(--text-light);margin-top:8px;display:block}
+    
+    .magazine-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+    .magazine-card{background:var(--surface);border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-soft);transition:all .3s;text-decoration:none;color:inherit;display:block}
+    .magazine-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
+    .magazine-card__cover{width:100%;aspect-ratio:3/4;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-light);position:relative;overflow:hidden}
+    .magazine-card__cover img{width:100%;height:100%;object-fit:cover;loading:lazy;decoding:async}
+    .magazine-card__badge{position:absolute;top:12px;left:12px;background:var(--accent);color:#FFF;font-size:11px;padding:4px 10px;border-radius:var(--r-sm);letter-spacing:1px}
+    .magazine-card__body{padding:20px}
+    .magazine-card__title{font-family:var(--font-display);font-size:15px;font-weight:600;margin-bottom:8px;line-height:1.5}
+    .magazine-card__meta{font-size:12px;color:var(--text-light)}
+    
+    .newsletter{background:var(--cream);border-radius:var(--r-md);padding:64px 48px;text-align:center}
+    .newsletter-title{font-family:var(--font-display);font-size:28px;font-weight:400;color:var(--text);letter-spacing:2px;margin-bottom:12px}
+    .newsletter-subtitle{font-size:14px;color:var(--text-light);margin-bottom:36px;line-height:2}
+    .newsletter-form{display:flex;justify-content:center;gap:12px;max-width:480px;margin:0 auto}
+    .newsletter-input{flex:1;padding:14px 20px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font-size:14px;font-family:var(--font-body);color:var(--text);outline:none;transition:border-color .2s}
+    .newsletter-input:focus{border-color:var(--accent)}
+    .newsletter-input::placeholder{color:#C0B8B0}
+    .newsletter-btn{padding:14px 32px;background:var(--text);color:var(--bg);border:none;border-radius:var(--r-sm);font-size:14px;letter-spacing:1px;cursor:pointer;transition:background .2s;font-family:var(--font-body);white-space:nowrap}
+    .newsletter-btn:hover{background:var(--accent)}
+    .newsletter-note{font-size:12px;color:var(--text-light);margin-top:20px}
+    
+    .site-footer{background:var(--text);color:rgba(255,255,255,.6);padding:64px 0 32px;font-size:13px}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+    .footer-brand{font-family:var(--font-display);font-size:18px;color:rgba(255,255,255,.9);margin-bottom:16px;letter-spacing:2px}
+    .footer-desc{line-height:2;font-size:13px}
+    .footer-heading{font-size:12px;letter-spacing:2px;color:rgba(255,255,255,.9);margin-bottom:20px}
+    .footer-links{list-style:none}
+    .footer-links li{margin-bottom:12px}
+    .footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;transition:color .2s}
+    .footer-links a:hover{color:rgba(255,255,255,.9)}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+    
+    @media (max-width:768px){
+      .container{padding:0 20px}
+      .section{padding:56px 0}
+      .hero{padding:72px 0 56px}
+      .hero-title{font-size:28px}
+      .magazine-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+      .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+      .section-title{font-size:24px}
+      .newsletter{padding:48px 24px}
+      .newsletter-form{flex-direction:column}
+      .newsletter-btn{width:100%}
     }
   </style>
 </head>
 <body>
-
-<nav class="top-nav">
-  <div class="container">
-    <a href="/" class="nav-brand" data-i18n="brand">ふろく<span>.</span>jp</a>
-    <ul class="nav-links">
-      <li><a href="#magazines" data-i18n="nav.magazines">杂志一览</a></li>
-      <li><a href="#about" data-i18n="nav.about">关于我们</a></li>
-      <li class="lang-switch">
-        <button class="lang-btn active" data-lang="zh-CN" onclick="switchLang('zh-CN')">简</button>
-        <button class="lang-btn" data-lang="zh-TW" onclick="switchLang('zh-TW')">繁</button>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="container">
-    <p class="hero-eyebrow" data-i18n="hero.eyebrow">2026年5月号 · 最新赠品情报</p>
-    <h1 class="hero-title" data-i18n="hero.title">日本杂志<span class="accent">赠品</span><br>完整指南</h1>
-    <p class="hero-subtitle" data-i18n="hero.subtitle">追踪《affinity》《steady.》《andGIRL》等<br>人气杂志附赠好物，不错过每一份惊喜</p>
-  </div>
-</section>
-
-<!-- 杂志一览 -->
-<section class="section" id="magazines">
-  <div class="container">
-    <div class="section-header">
-      <p class="section-eyebrow">magazine lineup</p>
-      <h2 class="section-title" data-i18n="mags.title">杂志一览</h2>
-      <span class="section-title-en" data-i18n="mags.subtitle">人气女性杂志 · 每月更新</span>
+  <nav class="top-nav">
+    <div class="container">
+      <a href="/" class="nav-brand" data-i18n="brand">ふろく<span>.</span>jp</a>
+      <ul class="nav-links">
+        <li><a href="#magazines" data-i18n="nav.magazines">杂志一览</a></li>
+        <li><a href="#about" data-i18n="nav.about">关于我们</a></li>
+        <li class="lang-switch">
+          <button class="lang-btn active" data-lang="zh-CN" onclick="switchLang('zh-CN')">简</button>
+          <button class="lang-btn" data-lang="zh-TW" onclick="switchLang('zh-TW')">繁</button>
+        </li>
+      </ul>
     </div>
-    <div class="magazine-grid">
-      <a href="/magazines/affinity.html" class="magazine-card">
-        <div class="magazine-card__cover">📖 affinity<span class="magazine-card__badge" data-i18n="mags.badge">本期</span></div>
-        <div class="magazine-card__body">
-          <h3 class="magazine-card__title">affinity</h3>
-          <p class="magazine-card__meta" data-i18n="mags.affinity">每月23日发售</p>
-        </div>
-      </a>
-      <a href="/magazines/steady.html" class="magazine-card">
-        <div class="magazine-card__cover">📖 steady.</div>
-        <div class="magazine-card__body">
-          <h3 class="magazine-card__title">steady.</h3>
-          <p class="magazine-card__meta" data-i18n="mags.steady">每月12日发售</p>
-        </div>
-      </a>
-      <a href="/magazines/andgirl.html" class="magazine-card">
-        <div class="magazine-card__cover">📖 andGIRL</div>
-        <div class="magazine-card__body">
-          <h3 class="magazine-card__title">andGIRL</h3>
-          <p class="magazine-card__meta" data-i18n="mags.andgirl">每月7日发售</p>
-        </div>
-      </a>
-      <a href="/magazines/sweet.html" class="magazine-card">
-        <div class="magazine-card__cover">📖 Sweet</div>
-        <div class="magazine-card__body">
-          <h3 class="magazine-card__title">Sweet</h3>
-          <p class="magazine-card__meta" data-i18n="mags.sweet">每月21日发售</p>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
+  </nav>
 
-<!-- Newsletter -->
-<section class="section">
-  <div class="container">
-    <div class="newsletter">
-      <p class="section-eyebrow" data-i18n="newsletter.eyebrow">subscribe</p>
-      <h2 class="newsletter-title" data-i18n="newsletter.title">订阅赠品速报</h2>
-      <p class="newsletter-subtitle" data-i18n="newsletter.subtitle">每月杂志发售日前，邮件通知你本期赠品清单<br>不错过任何一份心仪好物</p>
-      <form class="newsletter-form" onsubmit="handleSubscribe(event)">
-        <input type="email" class="newsletter-input" placeholder="your@email.com" data-i18n-placeholder="newsletter.placeholder" required>
-        <button type="submit" class="newsletter-btn" data-i18n="newsletter.btn">订阅</button>
-      </form>
-      <p class="newsletter-note" data-i18n="newsletter.note">免费订阅 · 随时可取消</p>
+  <section class="hero">
+    <div class="container">
+      <p class="hero-eyebrow" data-i18n="hero.eyebrow">2026年5月号 · 最新赠品情报</p>
+      <h1 class="hero-title" data-i18n="hero.title">日本杂志<span class="accent">赠品</span><br>完整指南</h1>
+      <p class="hero-subtitle" data-i18n="hero.subtitle">追踪《affinity》《steady.》《andGIRL》等<br>人气杂志附赠好物，不错过每一份惊喜</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-brand" data-i18n="brand">ふろく.jp</div>
-        <p class="footer-desc" data-i18n="footer.desc">日本杂志赠品情报汇总站。<br>每月更新最新杂志附赠好物，<br>帮你不错过每一份惊喜。</p>
+  <section class="section" id="magazines">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow">magazine lineup</p>
+        <h2 class="section-title" data-i18n="mags.title">杂志一览</h2>
+        <span class="section-title-en" data-i18n="mags.subtitle">人气女性杂志 · 每月更新</span>
       </div>
-      <div>
-        <h4 class="footer-heading" data-i18n="footer.navTitle">内容导航</h4>
-        <ul class="footer-links">
-          <li><a href="#" data-i18n="nav.magazines">杂志一览</a></li>
-          <li><a href="#" data-i18n="footer.archive">过去归档</a></li>
-          <li><a href="#" data-i18n="footer.ranking">人气排行</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="footer-heading" data-i18n="footer.catTitle">分类</h4>
-        <ul class="footer-links">
-          <li><a href="#" data-i18n="category.bags">包包·收纳袋</a></li>
-          <li><a href="#" data-i18n="category.beauty">美妆·护肤</a></li>
-          <li><a href="#" data-i18n="category.goods">生活杂货</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="footer-heading" data-i18n="footer.aboutTitle">关于</h4>
-        <ul class="footer-links">
-          <li><a href="#" data-i18n="footer.about">关于本站</a></li>
-          <li><a href="/admin/" data-i18n="admin.entry">管理后台</a></li>
-        </ul>
+      <div class="magazine-grid">
+        <a href="/magazines/affinity.html" class="magazine-card">
+          <div class="magazine-card__cover">📖 affinity<span class="magazine-card__badge" data-i18n="mags.badge">本期</span></div>
+          <div class="magazine-card__body">
+            <h3 class="magazine-card__title">affinity</h3>
+            <p class="magazine-card__meta" data-i18n="mags.affinity">每月23日发售</p>
+          </div>
+        </a>
+        <a href="/magazines/steady.html" class="magazine-card">
+          <div class="magazine-card__cover">📖 steady.</div>
+          <div class="magazine-card__body">
+            <h3 class="magazine-card__title">steady.</h3>
+            <p class="magazine-card__meta" data-i18n="mags.steady">每月12日发售</p>
+          </div>
+        </a>
+        <a href="/magazines/andgirl.html" class="magazine-card">
+          <div class="magazine-card__cover">📖 andGIRL</div>
+          <div class="magazine-card__body">
+            <h3 class="magazine-card__title">andGIRL</h3>
+            <p class="magazine-card__meta" data-i18n="mags.andgirl">每月7日发售</p>
+          </div>
+        </a>
+        <a href="/magazines/sweet.html" class="magazine-card">
+          <div class="magazine-card__cover">📖 Sweet</div>
+          <div class="magazine-card__body">
+            <h3 class="magazine-card__title">Sweet</h3>
+            <p class="magazine-card__meta" data-i18n="mags.sweet">每月21日发售</p>
+          </div>
+        </a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span data-i18n="footer.copyright">&copy; 2026 ふろく.jp — 日本杂志赠品情报</span>
-      <span>Designed with love in Tokyo</span>
-    </div>
-  </div>
-</footer>
+  </section>
 
-<script>
-const T = {
-  "zh-CN": {
-    "brand":"ふろく.jp","nav.magazines":"杂志一览","nav.about":"关于我们",
-    "hero.eyebrow":"2026年5月号 · 最新赠品情报",
-    "hero.title":"日本杂志<span class='accent'>赠品</span><br>完整指南",
-    "hero.subtitle":"追踪《affinity》《steady.》《andGIRL》等<br>人气杂志附赠好物，不错过每一份惊喜",
-    "admin.entry":"管理后台",
-    "mags.title":"杂志一览","mags.subtitle":"人气女性杂志 · 每月更新","mags.badge":"本期",
-    "mags.affinity":"每月23日发售","mags.steady":"每月12日发售","mags.andgirl":"每月7日发售","mags.sweet":"每月21日发售",
-    "category.bags":"包包·收纳袋","category.beauty":"美妆·护肤","category.goods":"生活杂货",
-    "footer.desc":"日本杂志赠品情报汇总站。<br>每月更新最新杂志附赠好物，<br>帮你不错过每一份惊喜。",
-    "footer.navTitle":"内容导航","footer.archive":"过去归档","footer.ranking":"人气排行",
-    "footer.catTitle":"分类","footer.aboutTitle":"关于","footer.about":"关于本站",
-    "footer.copyright":"&copy; 2026 ふろく.jp — 日本杂志赠品情报",
-    "newsletter.eyebrow":"subscribe",
-    "newsletter.title":"订阅赠品速报",
-    "newsletter.subtitle":"每月杂志发售日前，邮件通知你本期赠品清单<br>不错过任何一份心仪好物",
-    "newsletter.placeholder":"输入你的邮箱","newsletter.btn":"订阅","newsletter.note":"免费订阅 · 随时可取消"
-  },
-  "zh-TW": {
-    "brand":"ふろく.jp","nav.magazines":"雜誌一覽","nav.about":"關於我們",
-    "hero.eyebrow":"2026年5月號 · 最新贈品情報",
-    "hero.title":"日本雜誌<span class='accent'>贈品</span><br>完整指南",
-    "hero.subtitle":"追蹤《affinity》《steady.》《andGIRL》等<br>人氣雜誌附贈好物，不錯過每一份驚喜",
-    "admin.entry":"管理後台",
-    "mags.title":"雜誌一覽","mags.subtitle":"人氣女性雜誌 · 每月更新","mags.badge":"本期",
-    "mags.affinity":"每月23日發售","mags.steady":"每月12日發售","mags.andgirl":"每月7日發售","mags.sweet":"每月21日發售",
-    "category.bags":"包包·收納袋","category.beauty":"美妝·護膚","category.goods":"生活雜貨",
-    "footer.desc":"日本雜誌贈品情報匯總站。<br>每月更新最新雜誌附贈好物，<br>幫你錯過每一份驚喜。",
-    "footer.navTitle":"內容導航","footer.archive":"過去歸檔","footer.ranking":"人氣排行",
-    "footer.catTitle":"分類","footer.aboutTitle":"關於","footer.about":"關於本站",
-    "footer.copyright":"&copy; 2026 ふろく.jp — 日本雜誌贈品情報",
-    "newsletter.eyebrow":"subscribe",
-    "newsletter.title":"訂閱贈品速報",
-    "newsletter.subtitle":"每月雜誌發售日前，郵件通知你本期贈品清單<br>不錯過任何一份心儀好物",
-    "newsletter.placeholder":"輸入你的信箱","newsletter.btn":"訂閱","newsletter.note":"免費訂閱 · 隨時可取消"
-  }
-};
-let curLang = localStorage.getItem('site-lang') || 'zh-CN';
-function switchLang(lang){
-  curLang = lang; document.documentElement.lang = lang;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
-  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(T[lang]&&T[lang][k])el.innerHTML=T[lang][k];});
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.dataset.i18nPlaceholder;if(T[lang]&&T[lang][k])el.placeholder=T[lang][k];});
-  localStorage.setItem('site-lang',lang);
-}
-function handleSubscribe(e){
-  e.preventDefault();
-  const email=e.target.querySelector('input[type=email]').value;
-  if(email){alert(curLang==='zh-TW'?'訂閱成功！感謝你的支持。':'订阅成功！感谢你的支持。');e.target.reset();}
-}
-document.addEventListener('DOMContentLoaded',()=>switchLang(curLang));
-</script>
+  <section class="section">
+    <div class="container">
+      <div class="newsletter">
+        <p class="section-eyebrow" data-i18n="newsletter.eyebrow">subscribe</p>
+        <h2 class="newsletter-title" data-i18n="newsletter.title">订阅赠品速报</h2>
+        <p class="newsletter-subtitle" data-i18n="newsletter.subtitle">每月杂志发售日前，邮件通知你本期赠品清单<br>不错过任何一份心仪好物</p>
+        <form class="newsletter-form" onsubmit="handleSubscribe(event)">
+          <input type="email" class="newsletter-input" placeholder="your@email.com" data-i18n-placeholder="newsletter.placeholder" required>
+          <button type="submit" class="newsletter-btn" data-i18n="newsletter.btn">订阅</button>
+        </form>
+        <p class="newsletter-note" data-i18n="newsletter.note">免费订阅 · 随时可取消</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand" data-i18n="brand">ふろく.jp</div>
+          <p class="footer-desc" data-i18n="footer.desc">日本杂志赠品情报汇总站。<br>每月更新最新杂志附赠好物，<br>帮你不错过每一份惊喜。</p>
+        </div>
+        <div>
+          <h4 class="footer-heading" data-i18n="footer.navTitle">内容导航</h4>
+          <ul class="footer-links">
+            <li><a href="#" data-i18n="nav.magazines">杂志一览</a></li>
+            <li><a href="#" data-i18n="footer.archive">过去归档</a></li>
+            <li><a href="#" data-i18n="footer.ranking">人气排行</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading" data-i18n="footer.catTitle">分类</h4>
+          <ul class="footer-links">
+            <li><a href="#" data-i18n="category.bags">包包·收纳袋</a></li>
+            <li><a href="#" data-i18n="category.beauty">美妆·护肤</a></li>
+            <li><a href="#" data-i18n="category.goods">生活杂货</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading" data-i18n="footer.aboutTitle">关于</h4>
+          <ul class="footer-links">
+            <li><a href="#" data-i18n="footer.about">关于本站</a></li>
+            <li><a href="/admin/" data-i18n="admin.entry">管理后台</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span data-i18n="footer.copyright">&copy; 2026 ふろく.jp — 日本杂志赠品情报</span>
+        <span>Designed with love in Tokyo</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const T={"zh-CN":{"brand":"ふろく.jp","nav.magazines":"杂志一览","nav.about":"关于我们","hero.eyebrow":"2026年5月号 · 最新赠品情报","hero.title":"日本杂志<span class='accent'>赠品</span><br>完整指南","hero.subtitle":"追踪《affinity》《steady.》《andGIRL》等<br>人气杂志附赠好物，不错过每一份惊喜","admin.entry":"管理后台","mags.title":"杂志一览","mags.subtitle":"人气女性杂志 · 每月更新","mags.badge":"本期","mags.affinity":"每月23日发售","mags.steady":"每月12日发售","mags.andgirl":"每月7日发售","mags.sweet":"每月21日发售","category.bags":"包包·收纳袋","category.beauty":"美妆·护肤","category.goods":"生活杂货","footer.desc":"日本杂志赠品情报汇总站。<br>每月更新最新杂志附赠好物，<br>帮你不错过每一份惊喜。","footer.navTitle":"内容导航","footer.archive":"过去归档","footer.ranking":"人气排行","footer.catTitle":"分类","footer.aboutTitle":"关于","footer.about":"关于本站","footer.copyright":"&copy; 2026 ふろく.jp — 日本杂志赠品情报","newsletter.eyebrow":"subscribe","newsletter.title":"订阅赠品速报","newsletter.subtitle":"每月杂志发售日前，邮件通知你本期赠品清单<br>不错过任何一份心仪好物","newsletter.placeholder":"输入你的邮箱","newsletter.btn":"订阅","newsletter.note":"免费订阅 · 随时可取消"},"zh-TW":{"brand":"ふろく.jp","nav.magazines":"雜誌一覽","nav.about":"關於我們","hero.eyebrow":"2026年5月號 · 最新贈品情報","hero.title":"日本雜誌<span class='accent'>贈品</span><br>完整指南","hero.subtitle":"追蹤《affinity》《steady.》《andGIRL》等<br>人氣雜誌附贈好物，不錯過每一份驚喜","admin.entry":"管理後台","mags.title":"雜誌一覽","mags.subtitle":"人氣女性雜誌 · 每月更新","mags.badge":"本期","mags.affinity":"每月23日發售","mags.steady":"每月12日發售","mags.andgirl":"每月7日發售","mags.sweet":"每月21日發售","category.bags":"包包·收納袋","category.beauty":"美妝·護膚","category.goods":"生活雜貨","footer.desc":"日本雜誌贈品情報匯總站。<br>每月更新最新雜誌附贈好物，<br>幫你錯過每一份驚喜。","footer.navTitle":"內容導航","footer.archive":"過去歸檔","footer.ranking":"人氣排行","footer.catTitle":"分類","footer.aboutTitle":"關於","footer.about":"關於本站","footer.copyright":"&copy; 2026 ふろく.jp — 日本雜誌贈品情報","newsletter.eyebrow":"subscribe","newsletter.title":"訂閱贈品速報","newsletter.subtitle":"每月雜誌發售日前，郵件通知你本期贈品清單<br>不錯過任何一份心儀好物","newsletter.placeholder":"輸入你的信箱","newsletter.btn":"訂閱","newsletter.note":"免費訂閱 · 隨時可取消"}};
+    let curLang=localStorage.getItem('site-lang')||'zh-CN';
+    function switchLang(lang){
+      curLang=lang;document.documentElement.lang=lang;
+      document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+      document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(T[lang]&&T[lang][k])el.innerHTML=T[lang][k]});
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const k=el.dataset.i18nPlaceholder;if(T[lang]&&T[lang][k])el.placeholder=T[lang][k]});
+      localStorage.setItem('site-lang',lang);
+    }
+    function handleSubscribe(e){
+      e.preventDefault();
+      const email=e.target.querySelector('input[type=email]').value;
+      if(email){alert(curLang==='zh-TW'?'訂閱成功！感謝你的支持。':'订阅成功！感谢你的支持。');e.target.reset()}
+    }
+    document.addEventListener('DOMContentLoaded',()=>switchLang(curLang));
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('SW registered:', reg);
+        }).catch(err => {
+          console.log('SW registration failed:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
