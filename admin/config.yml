@@ -3,7 +3,12 @@
 # 部署到 GitHub Pages + Netlify 时：改回 git-gateway 后端
 
 backend:
-  name: test-repo
+  name: git-gateway
+  branch: main
+
+# 添加 Netlify Identity 配置
+identity_url: https://jpmag-gift.netlify.app/.netlify/identity
+gateway_url: https://jpmag-gift.netlify.app/.netlify/git-gateway
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
