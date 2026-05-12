@@ -6,6 +6,9 @@ backend:
   name: git-gateway
   branch: main
 
+# Netlify Identity 配置
+identity_url: https://jpmag-gift.netlify.app/.netlify/identity
+gateway_url: https://jpmag-gift.netlify.app/.netlify/git-gateway
 media_folder: "assets/images"
 public_folder: "/assets/images"
 
