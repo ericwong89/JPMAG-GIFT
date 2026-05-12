@@ -20,14 +20,27 @@
     <div class="spinner"></div>
     <p>正在加载管理后台...</p>
   </div>
-  <!-- Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/identity-widget.js"></script>
-  <!-- Decap CMS -->
+
+  <!-- 关键：必须先加载 Netlify Identity Widget，再加载 Decap CMS -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
   <script>
-    // 初始化 Netlify Identity Widget
+    // 强制绑定 Decap CMS 到 Netlify Identity
     if (window.netlifyIdentity) {
-      netlifyIdentity.init();
+      window.netlifyIdentity.init();
+      // 关键代码：告诉 Decap CMS 使用 Netlify Identity 作为认证方式
+      window.CMS.registerBackend("git-gateway", {
+        init: function(scope, options) {
+          return new Promise(function(resolve, reject) {
+            window.netlifyIdentity.on("login", user => {
+              resolve({ token: user.token.access_token });
+            });
+            window.netlifyIdentity.on("error", reject);
+            window.netlifyIdentity.open();
+          });
+        }
+      });
     }
   </script>
 </body>
