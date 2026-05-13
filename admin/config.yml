@@ -4,7 +4,7 @@
 
 backend:
   name: github
-  repo: jpmag-gift/jpmag-gift
+  repo: ericwong89/JPMAG-GIFT
   branch: main
 
 media_folder: "assets/images"
