@@ -1,46 +1,23 @@
-<!DOCTYPE html>
-<html lang="zh">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
   <title>ふろく.jp - 管理后台</title>
-  <meta name="robots" content="noindex,nofollow">
-  <link rel="preconnect" href="https://unpkg.com">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f5f5;display:flex;align-items:center;justify-content:center;min-height:100vh;color:#333}
-    .loading{text-align:center;position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999}
-    .loading p{margin-top:16px;color:#666;font-size:14px}
-    .spinner{width:32px;height:32px;border:3px solid #ddd;border-top-color:#333;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    /* 关键：加载完成后让动画完全消失，不占空间 */
-    .loading.hidden { display: none !important; }
-  </style>
 </head>
 <body>
-  <div class="loading" id="loading">
-    <div class="spinner"></div>
-    <p>正在加载管理后台...</p>
-  </div>
-
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
+  <script src="https://unpkg.com/decap-cms@3.8.3/dist/decap-cms.js"></script>
   <script>
     if (window.netlifyIdentity) {
-      window.netlifyIdentity.init();
-      window.CMS.registerBackend("git-gateway", {
-        init: function(scope, options) {
-          return new Promise(function(resolve, reject) {
-            window.netlifyIdentity.on("login", user => {
-              resolve({ token: user.token.access_token });
-              // 登录成功后，强制隐藏加载动画
-              document.getElementById('loading').classList.add('hidden');
-            });
-            window.netlifyIdentity.on("error", reject);
-            window.netlifyIdentity.open();
-          });
+      window.netlifyIdentity.on('init', function(user) {
+        if (!user && window.location.hash.indexOf('invite_token') !== -1) {
+          window.netlifyIdentity.open('signup');
         }
+      });
+      window.netlifyIdentity.on('login', function() {
+        document.location.href = '/admin/';
       });
     }
   </script>

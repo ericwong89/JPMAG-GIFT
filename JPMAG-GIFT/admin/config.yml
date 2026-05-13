@@ -3,7 +3,9 @@
 # 部署到 GitHub Pages + Netlify 时：改回 git-gateway 后端
 
 backend:
-  name: test-repo
+  name: github
+  repo: ericwong89/JPMAG-GIFT
+  branch: main
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
