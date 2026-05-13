@@ -1,10 +1,9 @@
 // Service Worker - 缓存策略（优化版）
-const CACHE_NAME = 'furoku-jp-v2';
+const CACHE_NAME = 'furoku-jp-v4';
 const urlsToCache = [
   '/',
   '/index.html',
   '/magazines/affinity.html',
-  '/admin/index.html',
   '/manifest.json',
   '/offline.html'
 ];
@@ -18,6 +17,7 @@ const CACHEABLE_EXTENSIONS = [
 
 // 安装时缓存核心资源
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       console.log('Opened cache');
@@ -38,7 +38,7 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
@@ -46,7 +46,16 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   // 只缓存 GET 请求
   if (event.request.method !== 'GET') return;
-  
+
+
+  const requestUrl = new URL(event.request.url);
+
+  // 后台页面始终走网络，避免 CMS 登录页被旧缓存卡住
+  if (requestUrl.pathname.startsWith('/admin')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(response => {
       // 缓存命中，返回缓存
