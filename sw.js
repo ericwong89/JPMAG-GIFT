@@ -1,10 +1,9 @@
 // Service Worker - 缓存策略（优化版）
-const CACHE_NAME = 'furoku-jp-v3';
+const CACHE_NAME = 'furoku-jp-v4';
 const urlsToCache = [
   '/',
   '/index.html',
   '/magazines/affinity.html',
-  '/admin/index.html',
   '/manifest.json',
   '/offline.html'
 ];
@@ -18,6 +17,7 @@ const CACHEABLE_EXTENSIONS = [
 
 // 安装时缓存核心资源
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       console.log('Opened cache');
@@ -38,7 +38,7 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
