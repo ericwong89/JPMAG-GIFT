@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JPMAG-GIFT Supabase 后台</title>
+  <style>
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:960px;margin:0 auto;padding:24px;background:#fafafa;color:#222}
+    .card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:16px;margin-bottom:16px}
+    input,textarea,button{font:inherit;padding:10px;border:1px solid #ddd;border-radius:8px}
+    input,textarea{width:100%;margin:6px 0 12px}
+    button{cursor:pointer;background:#111;color:#fff;border:none}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .muted{color:#666;font-size:13px}
+    ul{padding-left:20px}
+  </style>
+</head>
+<body>
+  <h1>Supabase 后台（最小可用）</h1>
+  <p class="muted">1) 先填写 URL 和 anon key；2) 邮箱登录；3) 新增赠品并查看列表。</p>
+
+  <div class="card">
+    <h3>连接设置</h3>
+    <input id="sbUrl" placeholder="SUPABASE_URL" />
+    <input id="sbAnon" placeholder="SUPABASE_ANON_KEY" />
+    <button id="saveCfg">保存配置到浏览器</button>
+  </div>
+
+  <div class="card">
+    <h3>登录</h3>
+    <input id="email" placeholder="管理员邮箱" />
+    <button id="sendOtp">发送登录链接</button>
+    <button id="logout">退出登录</button>
+  </div>
+
+  <div class="card">
+    <h3>新增赠品</h3>
+    <input id="title" placeholder="标题" />
+    <div class="row">
+      <input id="magazineSlug" placeholder="杂志 slug（例: affinity）" />
+      <input id="issue" placeholder="期号" />
+    </div>
+    <textarea id="desc" rows="4" placeholder="描述"></textarea>
+    <button id="createGift">保存赠品</button>
+  </div>
+
+  <div class="card">
+    <h3>赠品列表（最近 20 条）</h3>
+    <button id="reload">刷新列表</button>
+    <ul id="list"></ul>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    let supabase;
+    const get = id => document.getElementById(id);
+
+    function initClient() {
+      const url = localStorage.getItem('SUPABASE_URL') || get('sbUrl').value.trim();
+      const key = localStorage.getItem('SUPABASE_ANON_KEY') || get('sbAnon').value.trim();
+      if (!url || !key) throw new Error('请先配置 Supabase URL/Key');
+      get('sbUrl').value = url;
+      get('sbAnon').value = key;
+      supabase = window.supabase.createClient(url, key);
+    }
+
+    get('saveCfg').onclick = () => {
+      localStorage.setItem('SUPABASE_URL', get('sbUrl').value.trim());
+      localStorage.setItem('SUPABASE_ANON_KEY', get('sbAnon').value.trim());
+      alert('配置已保存');
+    };
+
+    get('sendOtp').onclick = async () => {
+      try {
+        initClient();
+        const email = get('email').value.trim();
+        const { error } = await supabase.auth.signInWithOtp({ email });
+        if (error) throw error;
+        alert('登录链接已发送，请检查邮箱。');
+      } catch (e) { alert(e.message); }
+    };
+
+    get('logout').onclick = async () => {
+      if (!supabase) initClient();
+      await supabase.auth.signOut();
+      alert('已退出');
+    };
+
+    get('createGift').onclick = async () => {
+      try {
+        if (!supabase) initClient();
+        const payload = {
+          title: get('title').value.trim(),
+          desc: get('desc').value.trim(),
+          magazine_slug: get('magazineSlug').value.trim() || null,
+          issue: get('issue').value.trim() || null,
+          published: true
+        };
+        const { error } = await supabase.from('gifts').insert(payload);
+        if (error) throw error;
+        alert('已保存');
+        loadList();
+      } catch (e) { alert(e.message); }
+    };
+
+    async function loadList() {
+      try {
+        if (!supabase) initClient();
+        const { data, error } = await supabase.from('gifts')
+          .select('title,magazine_slug,issue,published_at')
+          .order('published_at', { ascending: false })
+          .limit(20);
+        if (error) throw error;
+        get('list').innerHTML = (data || []).map(x => `<li>${x.title}｜${x.magazine_slug || '-'}｜${x.issue || '-'}｜${x.published_at || ''}</li>`).join('');
+      } catch (e) { get('list').innerHTML = `<li>加载失败：${e.message}</li>`; }
+    }
+
+    get('reload').onclick = loadList;
+    window.addEventListener('load', () => { try { initClient(); loadList(); } catch (_) {} });
+  </script>
+</body>
+</html>
