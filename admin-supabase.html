@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JPMAG-GIFT Supabase 后台</title>
+  <style>
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:1100px;margin:0 auto;padding:24px;background:#fafafa;color:#222}
+    .card{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:16px;margin-bottom:16px}
+    input,textarea,button{font:inherit;padding:10px;border:1px solid #ddd;border-radius:8px}
+    input,textarea{width:100%;margin:6px 0 12px}
+    button{cursor:pointer;background:#111;color:#fff;border:none;margin-right:8px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .muted{color:#666;font-size:13px}
+    .gift{border:1px solid #eee;border-radius:10px;padding:10px;margin:8px 0;background:#fff}
+    .gift img{max-width:120px;border-radius:8px;display:block;margin-top:8px}
+  </style>
+</head>
+<body>
+  <h1>Supabase 后台（正式版基础）</h1>
+  <p class="muted">登录后可新增/编辑/删除赠品，并支持图片上传到 Supabase Storage。</p>
+
+  <div class="card">
+    <h3>连接设置</h3>
+    <input id="sbUrl" placeholder="SUPABASE_URL" />
+    <input id="sbAnon" placeholder="SUPABASE_ANON_KEY" />
+    <button id="saveCfg">保存配置</button>
+    <button id="init">初始化连接</button>
+    <p id="sessionInfo" class="muted">未初始化</p>
+  </div>
+
+  <div class="card">
+    <h3>登录</h3>
+    <input id="email" placeholder="管理员邮箱" />
+    <button id="sendOtp">发送登录链接</button>
+    <button id="logout">退出</button>
+  </div>
+
+  <div class="card">
+    <h3 id="formTitle">新增赠品</h3>
+    <input id="giftId" type="hidden" />
+    <input id="title" placeholder="标题" />
+    <div class="row">
+      <input id="magazineSlug" placeholder="杂志 slug（例: affinity）" />
+      <input id="issue" placeholder="期号" />
+    </div>
+    <textarea id="desc" rows="4" placeholder="描述"></textarea>
+    <div class="row">
+      <input id="category" placeholder="分类" />
+      <input id="brand" placeholder="品牌" />
+    </div>
+    <div class="row">
+      <input id="price" type="number" placeholder="价格（日元）" />
+      <input id="imageUrl" placeholder="图片 URL（可选，上传后自动填充）" />
+    </div>
+    <input id="imageFile" type="file" accept="image/*" />
+    <button id="uploadImage">上传图片</button>
+    <button id="saveGift">保存赠品</button>
+    <button id="resetForm">清空表单</button>
+  </div>
+
+  <div class="card">
+    <h3>赠品列表（最近 50 条）</h3>
+    <button id="reload">刷新列表</button>
+    <div id="list"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    let supabase;
+    const get = id => document.getElementById(id);
+
+    function initClient() {
+      const url = localStorage.getItem('SUPABASE_URL') || get('sbUrl').value.trim();
+      const key = localStorage.getItem('SUPABASE_ANON_KEY') || get('sbAnon').value.trim();
+      if (!url || !key) throw new Error('请先配置 Supabase URL/Key');
+      get('sbUrl').value = url;
+      get('sbAnon').value = key;
+      supabase = window.supabase.createClient(url, key);
+      return supabase;
+    }
+
+    async function refreshSessionInfo() {
+      if (!supabase) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { get('sessionInfo').textContent = '未登录'; return; }
+      const { data: profile } = await supabase.from('profiles').select('role,email').eq('id', user.id).maybeSingle();
+      get('sessionInfo').textContent = `已登录：${user.email}｜角色：${profile?.role || 'unknown'}`;
+    }
+
+    function formPayload() {
+      return {
+        title: get('title').value.trim(),
+        desc: get('desc').value.trim() || null,
+        magazine_slug: get('magazineSlug').value.trim() || null,
+        issue: get('issue').value.trim() || null,
+        category: get('category').value.trim() || null,
+        brand: get('brand').value.trim() || null,
+        price: get('price').value ? Number(get('price').value) : null,
+        image_url: get('imageUrl').value.trim() || null,
+        published: true
+      };
+    }
+
+    function fillForm(item) {
+      get('giftId').value = item.id;
+      get('formTitle').textContent = '编辑赠品';
+      get('title').value = item.title || '';
+      get('desc').value = item.desc || '';
+      get('magazineSlug').value = item.magazine_slug || '';
+      get('issue').value = item.issue || '';
+      get('category').value = item.category || '';
+      get('brand').value = item.brand || '';
+      get('price').value = item.price || '';
+      get('imageUrl').value = item.image_url || '';
+    }
+
+    function resetForm() {
+      get('giftId').value = '';
+      get('formTitle').textContent = '新增赠品';
+      ['title','desc','magazineSlug','issue','category','brand','price','imageUrl'].forEach(id => get(id).value='');
+      get('imageFile').value = '';
+    }
+
+    async function saveGift() {
+      if (!supabase) initClient();
+      const id = get('giftId').value;
+      const payload = formPayload();
+      const q = id ? supabase.from('gifts').update(payload).eq('id', id) : supabase.from('gifts').insert(payload);
+      const { error } = await q;
+      if (error) throw error;
+      resetForm();
+      await loadList();
+      alert(id ? '更新成功' : '新增成功');
+    }
+
+    async function deleteGift(id) {
+      if (!confirm('确认删除这条赠品？')) return;
+      const { error } = await supabase.from('gifts').delete().eq('id', id);
+      if (error) throw error;
+      await loadList();
+    }
+
+    async function uploadImage() {
+      if (!supabase) initClient();
+      const file = get('imageFile').files[0];
+      if (!file) throw new Error('请选择图片');
+      const filename = `${Date.now()}-${file.name.replace(/\s+/g,'_')}`;
+      const path = `gifts/${filename}`;
+      const { error } = await supabase.storage.from('gift-images').upload(path, file, { upsert: false });
+      if (error) throw error;
+      const { data } = supabase.storage.from('gift-images').getPublicUrl(path);
+      get('imageUrl').value = data.publicUrl;
+      alert('图片上传成功');
+    }
+
+    async function loadList() {
+      if (!supabase) initClient();
+      const { data, error } = await supabase.from('gifts')
+        .select('id,title,desc,magazine_slug,issue,category,brand,price,image_url,published_at')
+        .order('published_at', { ascending: false }).limit(50);
+      if (error) throw error;
+      get('list').innerHTML = (data || []).map(x => `
+        <div class="gift">
+          <strong>${x.title}</strong><br>
+          <span class="muted">${x.magazine_slug || '-'}｜${x.issue || '-'}｜${x.category || '-'}｜${x.brand || '-'}｜${x.price || '-'}</span>
+          <div>${x.desc || ''}</div>
+          ${x.image_url ? `<img src="${x.image_url}" alt="gift" />` : ''}
+          <div style="margin-top:8px">
+            <button onclick='window.__editGift(${JSON.stringify('${x.id}')})'>编辑</button>
+            <button onclick='window.__delGift(${JSON.stringify('${x.id}')})'>删除</button>
+          </div>
+        </div>`).join('');
+      window.__giftMap = Object.fromEntries((data||[]).map(x => [x.id, x]));
+      window.__editGift = id => fillForm(window.__giftMap[id]);
+      window.__delGift = id => deleteGift(id).catch(e => alert(e.message));
+    }
+
+    get('saveCfg').onclick = () => {
+      localStorage.setItem('SUPABASE_URL', get('sbUrl').value.trim());
+      localStorage.setItem('SUPABASE_ANON_KEY', get('sbAnon').value.trim());
+      alert('配置已保存');
+    };
+    get('init').onclick = async () => { try { initClient(); await refreshSessionInfo(); await loadList(); } catch(e){ alert(e.message);} };
+    get('sendOtp').onclick = async () => {
+      try { if (!supabase) initClient(); const email = get('email').value.trim(); const { error } = await supabase.auth.signInWithOtp({ email }); if (error) throw error; alert('登录链接已发送'); }
+      catch (e) { alert(e.message); }
+    };
+    get('logout').onclick = async () => { if (!supabase) initClient(); await supabase.auth.signOut(); await refreshSessionInfo(); alert('已退出'); };
+    get('uploadImage').onclick = () => uploadImage().catch(e => alert(e.message));
+    get('saveGift').onclick = () => saveGift().catch(e => alert(e.message));
+    get('resetForm').onclick = resetForm;
+    get('reload').onclick = () => loadList().catch(e => alert(e.message));
+
+    window.addEventListener('load', async () => {
+      try { initClient(); await refreshSessionInfo(); await loadList(); } catch (_) {}
+    });
+  </script>
+</body>
+</html>
