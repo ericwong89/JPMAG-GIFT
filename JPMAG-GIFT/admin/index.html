@@ -1,13 +1,25 @@
-<!DOCTYPE html>
-<html lang="zh">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
   <title>ふろく.jp - 管理后台</title>
-  <!-- Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
-  <!-- Decap CMS 会自动在这个位置渲染管理界面 -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="https://unpkg.com/decap-cms@3.8.3/dist/decap-cms.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', function(user) {
+        if (!user && window.location.hash.indexOf('invite_token') !== -1) {
+          window.netlifyIdentity.open('signup');
+        }
+      });
+      window.netlifyIdentity.on('login', function() {
+        document.location.href = '/admin/';
+      });
+    }
+  </script>
 </body>
 </html>

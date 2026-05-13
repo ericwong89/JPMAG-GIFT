@@ -1,5 +1,5 @@
 // Service Worker - 缓存策略（优化版）
-const CACHE_NAME = 'furoku-jp-v2';
+const CACHE_NAME = 'furoku-jp-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -46,7 +46,16 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   // 只缓存 GET 请求
   if (event.request.method !== 'GET') return;
-  
+
+
+  const requestUrl = new URL(event.request.url);
+
+  // 后台页面始终走网络，避免 CMS 登录页被旧缓存卡住
+  if (requestUrl.pathname.startsWith('/admin')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(response => {
       // 缓存命中，返回缓存
